@@ -14,7 +14,7 @@ import static spark.Spark.get;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.json.*;
+//import org.json.*;
 
 public class Main {
 
@@ -32,14 +32,19 @@ public class Main {
     post("/validarFirma", (req, res) -> {
     	String mensaje;
     	String hash;
-    	JSONObject body = new JSONObject(req.body());
+    	/*JSONObject body = new JSONObject(req.body());
     	
     	if(body == null || !body.has("mensaje") || !body.has("hash")) {
     		res.status(400);
             return "parametros no validos";
+    	}*/
+    	
+    	if(req.body() == null || !req.body().contains("mensaje") || !req.body().contains("hash")) {
+    		res.status(400);
+            return "parametros no validos";
     	}
     	
-    	try {
+    	/*try {
     		mensaje = body.getString("mensaje");
         	hash = body.getString("hash");
     	} catch(JSONException e) {
@@ -54,7 +59,10 @@ public class Main {
     		hashValido = true;
     		
     	res.body("{\n \"valido\":"+hashValido+",\n \"mensaje\":\""+mensaje+"\"\n}");
-    	return ""+hashValido;
+    	return ""+hashValido;*/
+    	
+    	res.status(200);
+    	return "";
     		            
     });
     
