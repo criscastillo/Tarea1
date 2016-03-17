@@ -28,7 +28,7 @@ public class Main {
     post("/validarFirma", (req, res) -> {
     	boolean parametrosValidos = true;
     	
-    	if(req.attribute("mensaje")==null || req.attribute("hash")==null)
+    	if(req.params("mensaje")==null || req.params("hash")==null)
     		parametrosValidos = false;
     	
     	if(parametrosValidos) {
