@@ -17,14 +17,13 @@ public class Main {
   public static void main(String[] args) {
 	
     port(Integer.valueOf(System.getenv("PORT")));
-    staticFileLocation("/public");
 	
-    get("/", (req, res) -> "Hello World");
-
     get("/status", (req, res) -> {
             res.status(201);
             return null;
         });
+    
+    get("/", (req, res) -> "Hello World");
     
     post("/validarFirma", (req, res) -> {
     	boolean parametrosValidos = true;
