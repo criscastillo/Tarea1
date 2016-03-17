@@ -5,11 +5,14 @@ import java.util.Map;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.MessageDigest;
 
 import static spark.Spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 import static spark.Spark.get;
+
+import javax.xml.bind.DatatypeConverter;
 
 public class Main {
 
@@ -26,13 +29,20 @@ public class Main {
     
     post("/validarFirma", (req, res) -> {
     	boolean parametrosValidos = true;
+    	String mensaje = req.params("mensaje");
+    	String hash = req.params("hash");
+    	boolean hashValido = false;
     	
-    	if(req.params("mensaje")==null || req.params("hash")==null)
+    	if(mensaje==null || hash==null)
     		parametrosValidos = false;
     	
     	if(parametrosValidos) {
     		res.status(200);
-            return "";
+    		if(hash.toLowerCase().equals(DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(mensaje.getBytes("UTF-8"))).toLowerCase()))
+    			hashValido = true;
+    		res.body("{\n \"valido\":"+hashValido+",\n \"mensaje\":\""+mensaje+"\"\n}");
+    		return ""+hashValido;
+    		            
     	} else {
     		res.status(400);
             return "";
