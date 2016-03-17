@@ -14,6 +14,8 @@ import static spark.Spark.get;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.json.*;
+
 public class Main {
 
   public static void main(String[] args) {
@@ -28,26 +30,32 @@ public class Main {
     get("/", (req, res) -> "Hello World");
     
     post("/validarFirma", (req, res) -> {
-    	boolean parametrosValidos = true;
-    	String mensaje = req.attribute("mensaje").toString();
-    	String hash = req.attribute("hash").toString();
-    	boolean hashValido = false;
+    	String mensaje;
+    	String hash;
+    	JSONObject body = new JSONObject(req.body());
     	
-    	if(mensaje==null || hash==null)
-    		parametrosValidos = false;
-    	
-    	if(parametrosValidos) {
-    		res.status(200);
-    		if(hash.toLowerCase().equals(DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(mensaje.getBytes("UTF-8"))).toLowerCase()))
-    			hashValido = true;
-    		
-    		res.body("{\n \"valido\":"+hashValido+",\n \"mensaje\":\""+mensaje+"\"\n}");
-    		return ""+hashValido;
-    		            
-    	} else {
+    	if(body == null || !body.has("mensaje") || !body.has("hash")) {
     		res.status(400);
             return "parametros no validos";
     	}
+    	
+    	try {
+    		mensaje = body.getString("mensaje");
+        	hash = body.getString("hash");
+    	} catch(JSONException e) {
+    		res.status(500);
+    		return "parametros no string";
+    	}
+    	    	
+    	boolean hashValido = false;
+    	res.status(200);
+    	
+    	if(hash.toLowerCase().equals(DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(mensaje.getBytes("UTF-8"))).toLowerCase()))
+    		hashValido = true;
+    		
+    	res.body("{\n \"valido\":"+hashValido+",\n \"mensaje\":\""+mensaje+"\"\n}");
+    	return ""+hashValido;
+    		            
     });
     
   }
