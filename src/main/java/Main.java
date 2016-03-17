@@ -45,7 +45,7 @@ public class Main {
     		            
     	} else {
     		res.status(400);
-            return "";
+            return "parametros no validos";
     	}
     });
     
