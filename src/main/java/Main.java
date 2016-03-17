@@ -18,12 +18,12 @@ public class Main {
 	
     port(Integer.valueOf(System.getenv("PORT")));
 	
-    get("/", (req, res) -> {
+    get("/status", (req, res) -> {
             res.status(201);
-            return null;
+            return "";
         });
     
-    get("/status", (req, res) -> "Hello World");
+    get("/", (req, res) -> "Hello World");
     
     post("/validarFirma", (req, res) -> {
     	boolean parametrosValidos = true;
@@ -33,10 +33,10 @@ public class Main {
     	
     	if(parametrosValidos) {
     		res.status(200);
-            return null;
+            return "";
     	} else {
     		res.status(400);
-            return null;
+            return "";
     	}
     });
     
