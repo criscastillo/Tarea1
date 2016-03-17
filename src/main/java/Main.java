@@ -7,9 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static spark.Spark.*;
-import spark.template.freemarker.FreeMarkerEngine;
-import spark.ModelAndView;
-import static spark.Spark.get;
 
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
@@ -17,17 +14,30 @@ public class Main {
 
   public static void main(String[] args) {
 
-    port(Integer.valueOf(System.getenv("PORT")));
-    staticFileLocation("/public");
-
     get("/", (req, res) -> "Hello World");
 
     get("/status", (req, res) -> {
             res.status(201);
-            return "Hello World";
+            return null;
         });
-
-    get("/db", (req, res) -> {
+    
+    post("/validarFirma", (req, res) -> {
+    	boolean parametrosValidos = true;
+    	
+    	if(req.attribute("mensaje")==null || req.attribute("hash")==null)
+    		parametrosValidos = false;
+    	
+    	if(parametrosValidos) {
+    		res.status(200);
+            return null;
+    	} else {
+    		res.status(400);
+            return null;
+    	}
+        
+    });
+    
+    /*get("/db", (req, res) -> {
       Connection connection = null;
       Map<String, Object> attributes = new HashMap<>();
       try {
@@ -51,7 +61,7 @@ public class Main {
       } finally {
         if (connection != null) try{connection.close();} catch(SQLException e){}
       }
-    }, new FreeMarkerEngine());
+    }, new FreeMarkerEngine());*/
 
   }
 
