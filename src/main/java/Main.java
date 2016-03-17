@@ -29,8 +29,8 @@ public class Main {
     
     post("/validarFirma", (req, res) -> {
     	boolean parametrosValidos = true;
-    	String mensaje = req.params("mensaje");
-    	String hash = req.params("hash");
+    	String mensaje = req.attribute("mensaje").toString();
+    	String hash = req.attribute("hash").toString();
     	boolean hashValido = false;
     	
     	if(mensaje==null || hash==null)
@@ -40,6 +40,7 @@ public class Main {
     		res.status(200);
     		if(hash.toLowerCase().equals(DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(mensaje.getBytes("UTF-8"))).toLowerCase()))
     			hashValido = true;
+    		
     		res.body("{\n \"valido\":"+hashValido+",\n \"mensaje\":\""+mensaje+"\"\n}");
     		return ""+hashValido;
     		            
